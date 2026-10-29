@@ -36,7 +36,7 @@ Each recipe names the endpoints; check their docs pages for every field before y
 3. Apply buffered updates newer than the snapshot's height, then keep applying live ones.
 4. On `resync required`, start again from step 1.
 
-The SDK does this for you: `from hydromancer_sdk import OrderbookStream` / `L4OrderbookClient` (install from https://github.com/hydromancerxyz/hydromancer-sdk). Guide: https://docs.hydromancer.xyz/readme/builder-guides/l4-orderbook-streaming
+The SDK does this for you: `from hydromancer_sdk import OrderbookStream` / `L4OrderbookClient` (source on GitHub: https://github.com/hydromancerxyz/hydromancer-sdk). Guide: https://docs.hydromancer.xyz/readme/builder-guides/l4-orderbook-streaming
 
 ## HIP-4 prediction markets
 

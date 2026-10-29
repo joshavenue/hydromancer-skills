@@ -44,12 +44,12 @@ python scripts/hydromancer.py info '{"type": "clearinghouseState", "user": "0xdf
 python scripts/hydromancer.py positions 0xABC... 0xDEF...      # batchClearinghouseStates
 python scripts/hydromancer.py fills 0xABC... --hours 24        # userFillsByTime, follows the cursor
 python scripts/hydromancer.py liquidations --coin BTC --hours 6
-pip install 'websockets>=13' && python scripts/stream_trades.py BTC  # live trades
+python scripts/stream_trades.py BTC                            # live trades (needs websockets 13+)
 ```
 
 `scripts/hydromancer.py` uses only the Python standard library. `scripts/stream_trades.py` needs `websockets>=13`.
 
-For order book streaming in Python, the official SDK (`pip install git+https://github.com/hydromancerxyz/hydromancer-sdk.git`) maintains local L2 / L4 books for you; it reads `HYDROMANCER_API_KEY` from the environment.
+For order book streaming in Python, the official SDK ([hydromancerxyz/hydromancer-sdk](https://github.com/hydromancerxyz/hydromancer-sdk), source on GitHub) maintains local L2 / L4 books for you; it reads `HYDROMANCER_API_KEY` from the environment.
 
 ## Pitfalls
 
@@ -59,7 +59,7 @@ For order book streaming in Python, the official SDK (`pip install git+https://g
 - **WebSocket heartbeats are JSON.** The server sends `{"type": "ping"}` every 60 seconds; reply `{"type": "pong"}` or the connection is closed. Protocol-level ping handling in your library is not enough.
 - **Resume, don't resubscribe.** Save `sessionId` from the `connected` message and the `cursor` from every message. On reconnect, add `&sessionId=<id>&cursor=<last cursor>` to the URL: the server restores your subscriptions and replays what you missed. On `resync required`, reconnect without both and rebuild from a REST snapshot.
 - **Replay windows vary by channel.** Replay covers up to 3 minutes for `l4BookUpdates`, 5 minutes for order updates and 15 minutes for other replayable channels (30 seconds where only the in-memory cache serves them). `bbo`, `l2Book`, `allActiveAssetCtx` and `setOracleUpdates` are live-only.
-- **Market-wide snapshots are binary.** `perpSnapshots`, `spotSnapshots`, `accountValueSnapshots` and similar return zstd-compressed MessagePack (`pip install zstandard msgpack`) and have their own limit of 5 requests per 10 minutes.
+- **Market-wide snapshots are binary.** `perpSnapshots`, `spotSnapshots`, `accountValueSnapshots` and similar return zstd-compressed MessagePack (decode with the `zstandard` and `msgpack` packages) and have their own limit of 5 requests per 10 minutes.
 - **Reservoir is requester-pays.** The data is free, but AWS bills your account for requests and transfer. Narrow paths by date and select only the columns you need.
 - **HIP-3 coins are prefixed** with the DEX name, for example `"xyz:JPY"`, in the API and in Reservoir fills, candles and snapshots. Only Reservoir order-book file names drop the prefix.
 - **A 200 with `[]` or `null` usually means no data for that input, not an error.** Some docs examples use old timestamps (2009, 2023) or the zero address and come back empty; use a recent window and an active wallet. Some requests are snapshots of current state (`registeredOutcomesSnapshot` with old `outcome_ids` returns 500 "No outcome snapshots found"; omit the ids to get every active outcome).

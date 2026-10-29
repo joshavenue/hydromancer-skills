@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Stream live Hyperliquid trades from Hydromancer's WebSocket.
 
-  pip install 'websockets>=13'
+  Requires the websockets package, version 13 or later.
   export HYDROMANCER_API_KEY=...
   python stream_trades.py BTC ETH            # prints trades; Ctrl+C to stop
 """

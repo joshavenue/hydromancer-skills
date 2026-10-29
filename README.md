@@ -19,7 +19,7 @@ Or per project: copy the folder into `.claude/skills/hydromancer-hyperliquid/`. 
 ## Requirements
 
 - A Hydromancer API key in `HYDROMANCER_API_KEY` ([plans and onboarding](https://docs.hydromancer.xyz/readme/get-api-keys); free access for public goods and early-stage builder-code apps: [details](https://docs.hydromancer.xyz/readme/hydromancer-for-early-stage-teams)).
-- Python 3.9+ for `scripts/hydromancer.py` (standard library only). `scripts/stream_trades.py` needs `pip install 'websockets>=13'`.
+- Python 3.9+ for `scripts/hydromancer.py` (standard library only). `scripts/stream_trades.py` needs the `websockets` package, version 13 or later.
 - AWS credentials for Reservoir (the bucket is requester-pays; no Hydromancer key needed).
 
 ## Contents

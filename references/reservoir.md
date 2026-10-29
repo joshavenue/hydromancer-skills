@@ -32,7 +32,7 @@ aws s3 cp s3://hydromancer-reservoir/by_dex/hyperliquid/fills/perp/liquidations/
   ./liquidations-2026-10-18.parquet --request-payer requester
 ```
 
-DuckDB reads only the columns and row groups a query needs. Install `pip install duckdb==1.4.5 pytz` (without `pytz`, Python fetches of timestamp columns fail with `No module named 'pytz'`).
+DuckDB reads only the columns and row groups a query needs. It needs the `duckdb` package (tested on 1.4.5) and `pytz`; without `pytz`, Python fetches of timestamp columns fail with `No module named 'pytz'`.
 
 Connect by exporting your active AWS CLI session into environment variables. A plain `PROVIDER credential_chain` secret fails with `aws login` sessions (`Secret Validation Failure … Credential Chain: 'config'`), and every query after it returns 403:
 
@@ -48,7 +48,7 @@ for src, dst in [("AccessKeyId", "AWS_ACCESS_KEY_ID"),
         os.environ[dst] = creds[src]   # in memory only; never print or save these
 
 con = duckdb.connect()
-con.execute("INSTALL httpfs; LOAD httpfs; SET TimeZone = 'UTC';")
+con.execute("SET TimeZone = 'UTC';")
 con.execute("""CREATE SECRET (TYPE s3, PROVIDER credential_chain, CHAIN 'env',
                REGION 'ap-northeast-1');
                SET s3_requester_pays = true;""")
