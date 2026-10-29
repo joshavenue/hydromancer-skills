@@ -9,10 +9,10 @@ Each recipe names the endpoints; check their docs pages for every field before y
 3. **Live activity for those wallets:** WebSocket `userFills` and `userOrderUpdates` with an `addresses` list (each address counts as one subscription).
 4. **Past days:** Reservoir `by_dex/hyperliquid/snapshots/perp/date=…/` (daily position snapshots).
 
-## A wallet's complete trade history (tax, PnL, analytics)
+## A wallet's trade history (tax, PnL, analytics)
 
 - Page `userFillsByTime`: send `startTime` on the first call, then `cursor` = `"<time>_<txIndex>"` of the last fill on each following call, until a page comes back shorter than `limit`. `python scripts/hydromancer.py fills 0x… --hours 720` does this and de-duplicates by `tid`. Tested: paging a busy wallet in pages of 300 returned exactly the same 1,798 fills as one large request.
-- Hyperliquid's own API only reaches a user's 10,000 most recent fills; Hydromancer's history endpoints and Reservoir fills (`by_dex/hyperliquid/fills/perp/all/`, filtered by `address`) go further back. Hydromancer's backfill gives full history for most traders but not for some very high-volume addresses; check the endpoint page for coverage.
+- Hyperliquid's own API only reaches a user's 10,000 most recent fills; Hydromancer's history endpoints and Reservoir fills (`by_dex/hyperliquid/fills/perp/all/`, filtered by `address`) go further back. Hydromancer's docs say its backfill covers full history for most traders but not for some very high-volume addresses; check the endpoint page for coverage.
 - Realised PnL per closed position: `userCompletedTrades` / `userCompletedTradesByTime`; summary stats: `userPnlSummary`.
 - Funding and transfers: `userFunding`, `userNonFundingLedgerUpdates`.
 
@@ -36,7 +36,7 @@ Each recipe names the endpoints; check their docs pages for every field before y
 3. Apply buffered updates newer than the snapshot's height, then keep applying live ones.
 4. On `resync required`, start again from step 1.
 
-The SDK does this for you: `from hydromancer_sdk import OrderbookStream` / `L4OrderbookClient` (source on GitHub: https://github.com/hydromancerxyz/hydromancer-sdk). Guide: https://docs.hydromancer.xyz/readme/builder-guides/l4-orderbook-streaming
+The SDK does this for you: `from hydromancer_sdk import OrderbookStream` / `L4OrderbookClient` (Python 3.11+, pinned by commit in `requirements-sdk.txt`). Guide: https://docs.hydromancer.xyz/readme/builder-guides/l4-orderbook-streaming
 
 ## HIP-4 prediction markets
 

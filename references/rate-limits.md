@@ -2,7 +2,7 @@
 
 ## REST budget
 
-Each plan has a per-minute weight budget: **5,000** (Starter) / **20,000** (Growth) / **50,000** (Scale). Most requests cost **2**. Heavier ones, for example:
+Each key has a per-minute weight budget (currently 5,000 to 50,000, depending on the key; the `X-RateLimit-Limit` response header shows yours). Most requests cost **2**. Heavier ones, for example:
 
 | Weight | Endpoints |
 |---|---|
@@ -29,4 +29,4 @@ The `*SnapshotTimestamp` endpoints cost 1 and tell you whether a new snapshot is
 
 Admitted responses carry `X-RateLimit-Limit`, `X-RateLimit-Remaining`, `X-RateLimit-Reset` and `X-RateLimit-Cost`. A 429 adds `Retry-After` and a JSON body with `retryAfterSecs`, `remaining`, `required` and `correlationId`. Wait for `Retry-After` (or `retryAfterSecs`) plus a little jitter; otherwise back off exponentially, capped around 30 seconds, with a limit on attempts. `scripts/hydromancer.py` does this.
 
-Weights are separate from billed tokens; see https://docs.hydromancer.xyz/readme/pricing. Current table: https://docs.hydromancer.xyz/readme/rest-api/rate-limits-and-user-limits
+Weights are separate from token usage. Current table: https://docs.hydromancer.xyz/readme/rest-api/rate-limits-and-user-limits

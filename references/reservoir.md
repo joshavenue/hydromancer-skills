@@ -1,6 +1,6 @@
 # Reservoir: historical Hyperliquid data on S3
 
-Free archive of Hyperliquid exchange data, stored as Parquet in `s3://hydromancer-reservoir` (region `ap-northeast-1`). No Hydromancer API key is needed. The bucket is **requester-pays**: the data is free, but AWS bills your account for requests and transfer, so you need AWS credentials.
+Archive of Hyperliquid exchange data, stored as Parquet in `s3://hydromancer-reservoir` (region `ap-northeast-1`). No Hydromancer API key is needed. The bucket is **requester-pays**: the data is free, but AWS bills your account for requests and transfer, so you need AWS credentials.
 
 Docs: https://docs.hydromancer.xyz/reservoir · schemas: [fills](https://docs.hydromancer.xyz/reservoir/schema-reference/fills), [candles](https://docs.hydromancer.xyz/reservoir/schema-reference/candles), [snapshots](https://docs.hydromancer.xyz/reservoir/schema-reference/snapshots), [orderbook](https://docs.hydromancer.xyz/reservoir/schema-reference/orderbook)
 
@@ -32,7 +32,7 @@ aws s3 cp s3://hydromancer-reservoir/by_dex/hyperliquid/fills/perp/liquidations/
   ./liquidations-2026-10-18.parquet --request-payer requester
 ```
 
-DuckDB reads only the columns and row groups a query needs. It needs the `duckdb` package (tested on 1.4.5) and `pytz`; without `pytz`, Python fetches of timestamp columns fail with `No module named 'pytz'`.
+DuckDB reads only the columns and row groups a query needs. It needs `duckdb` and `pytz` (tested versions pinned in `requirements.txt`); without `pytz`, Python fetches of timestamp columns fail with `No module named 'pytz'`.
 
 Connect by exporting your active AWS CLI session into environment variables. A plain `PROVIDER credential_chain` secret fails with `aws login` sessions (`Secret Validation Failure … Credential Chain: 'config'`), and every query after it returns 403:
 

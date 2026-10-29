@@ -40,7 +40,7 @@ Field notes for common endpoints:
 
 ## Endpoint catalog
 
-Generated from https://docs.hydromancer.xyz/llms.txt. Descriptions are the docs' own.
+Generated from https://docs.hydromancer.xyz/llms.txt. Descriptions follow the docs, lightly edited.
 
 ### User position data
 
@@ -261,19 +261,19 @@ Endpoints for market-wide data: open interest history, position and TWAP snapsho
 | type | What it returns | Docs |
 |---|---|---|
 | `openInterestHistory` | Historical OHLC of open interest, per coin or per sector, in contracts and USD. | [docs](https://docs.hydromancer.xyz/readme/rest-api/market-data/openinteresthistory) |
-| `perpSnapshots` | Unique endpoint allowing to get entire perps positioning of all Hyperliquid traders. | [docs](https://docs.hydromancer.xyz/readme/rest-api/market-data/perpsnapshot) |
+| `perpSnapshots` | Market-wide snapshot of every trader's perp positions (binary; see SKILL.md). | [docs](https://docs.hydromancer.xyz/readme/rest-api/market-data/perpsnapshot) |
 | `perpTwapSnapshots` | Endpoint to get all active TWAP orders across all Hyperliquid perpetual markets. | [docs](https://docs.hydromancer.xyz/readme/rest-api/market-data/perptwapsnapshot) |
-| `accountValueSnapshots` | Unique endpoint allowing to get an account value snapshot of all accounts on Hyperliquid, including filtering by a specific type of collateral or HIP-3 DEX. | [docs](https://docs.hydromancer.xyz/readme/rest-api/market-data/accountvaluesnapshot) |
-| `spotSnapshots` | Unique endpoint allowing to get entire spot positioning of all Hyperliquid spot holders. | [docs](https://docs.hydromancer.xyz/readme/rest-api/market-data/spotsnapshot) |
+| `accountValueSnapshots` | Snapshot of every account's value, with optional filtering by a specific type of collateral or HIP-3 DEX. | [docs](https://docs.hydromancer.xyz/readme/rest-api/market-data/accountvaluesnapshot) |
+| `spotSnapshots` | Market-wide snapshot of every holder's spot balances (binary; see SKILL.md). | [docs](https://docs.hydromancer.xyz/readme/rest-api/market-data/spotsnapshot) |
 | `spotTwapSnapshots` | Endpoint to get all active TWAP orders across all Hyperliquid spot markets. | [docs](https://docs.hydromancer.xyz/readme/rest-api/market-data/spottwapsnapshot) |
 | `l4Book` | Get L4 orderbook snapshot for perpetual markets. | [docs](https://docs.hydromancer.xyz/readme/rest-api/market-data/l4book) |
 | `l2Book` | Get L2 orderbook snapshot with aggregated price levels. | [docs](https://docs.hydromancer.xyz/readme/rest-api/market-data/l2book) |
 | `l2BookDiffSnapshot` | Get L2 orderbook snapshot for bootstrapping the l2BookDiff WebSocket stream. | [docs](https://docs.hydromancer.xyz/readme/rest-api/market-data/l2bookdiffsnapshot) |
 | `tpslBook` | Get a snapshot of all active TP/SL trigger orders. | [docs](https://docs.hydromancer.xyz/readme/rest-api/market-data/tpslbook) |
 | `marketLiquidity` | Get aggregated orderbook depth for a specific market | [docs](https://docs.hydromancer.xyz/readme/rest-api/market-data/marketliquidity) |
-| `marketLiquidityHistory` | Get hourly-averaged orderbook depth history for a specific market with unlimited retention. | [docs](https://docs.hydromancer.xyz/readme/rest-api/market-data/marketliquidityhistory) |
+| `marketLiquidityHistory` | Get hourly-averaged orderbook depth history for a specific market. | [docs](https://docs.hydromancer.xyz/readme/rest-api/market-data/marketliquidityhistory) |
 | `slippageHistory` | Get historical slippage estimates for a specific market and notional size. | [docs](https://docs.hydromancer.xyz/readme/rest-api/market-data/slippagehistory) |
-| `currentDepth` | Get real-time cumulative orderbook depth at multiple BPS levels for all markets. | [docs](https://docs.hydromancer.xyz/readme/rest-api/market-data/currentdepth) |
+| `currentDepth` | Get current cumulative orderbook depth at multiple BPS levels for all markets. | [docs](https://docs.hydromancer.xyz/readme/rest-api/market-data/currentdepth) |
 | `fundingPayments` | Get all funding payments for the most recent hour across all markets and users as a compressed snapshot. | [docs](https://docs.hydromancer.xyz/readme/rest-api/market-data/fundingpayments) |
 | `maxMarketOrderNtls` | Get the maximum market order notional sizes by leverage tier. | [docs](https://docs.hydromancer.xyz/readme/rest-api/market-data/maxmarketorderntls) |
 | `perpsAtOpenInterestCap` | Get the list of perp assets currently at their open interest cap. | [docs](https://docs.hydromancer.xyz/readme/rest-api/market-data/perpsatopeninterestcap) |

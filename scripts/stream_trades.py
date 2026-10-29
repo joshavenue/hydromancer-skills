@@ -1,18 +1,26 @@
 #!/usr/bin/env python3
 """Stream live Hyperliquid trades from Hydromancer's WebSocket.
 
-  Requires the websockets package, version 13 or later.
+  Requires websockets (pinned in requirements.txt).
   export HYDROMANCER_API_KEY=...
   python stream_trades.py BTC ETH            # prints trades; Ctrl+C to stop
+
+The WebSocket only accepts the key as the `token` query parameter, so this
+script never prints the connection URL and masks `token=` in everything it prints.
 """
 import asyncio
 import json
 import os
+import re
 import sys
 
 import websockets
 
 URL = "wss://api.hydromancer.xyz/ws?token={key}"
+
+
+def redact(text):
+    return re.sub(r"token=[^&\s'\"]+", "token=***", text)
 
 
 async def main(coins, max_messages=None):
@@ -35,19 +43,24 @@ async def main(coins, max_messages=None):
                 continue
             kind = msg.get("type")
             if kind in ("connected", "subscriptionUpdate"):
-                print("control:", json.dumps(msg), file=sys.stderr)
+                print("control:", redact(json.dumps(msg)), file=sys.stderr)
                 if kind == "subscriptionUpdate" and msg.get("failed"):
-                    sys.exit(f"subscription failed: {json.dumps(msg)}")
+                    sys.exit(f"subscription failed: {redact(json.dumps(msg))}")
                 continue
             if kind == "error":
-                sys.exit(f"server error: {json.dumps(msg)}")
+                sys.exit(f"server error: {redact(json.dumps(msg))}")
             if kind != "trades":
                 continue  # ignore other message types (the protocol adds new ones over time)
-            print(json.dumps(msg))
+            print(redact(json.dumps(msg)))
             seen += 1
             if max_messages and seen >= max_messages:
                 break
 
 
 if __name__ == "__main__":
-    asyncio.run(main(sys.argv[1:] or ["BTC"]))
+    try:
+        asyncio.run(main(sys.argv[1:] or ["BTC"]))
+    except KeyboardInterrupt:
+        pass
+    except Exception as exc:  # keep the key out of tracebacks and logs
+        sys.exit(f"stream error: {type(exc).__name__}: {redact(str(exc))}")

@@ -4,6 +4,8 @@
 wss://api.hydromancer.xyz/ws?token=$HYDROMANCER_API_KEY        (testnet: wss://api-testnet.hydromancer.xyz/ws)
 ```
 
+The key is accepted only as the `token` query parameter; an `Authorization` header is answered with "Missing token query parameter". Because URLs can be logged by proxies, load balancers and crash reporters: connect from server-side code only, never log the full URL, mask `token=` in errors, use a separate key per app and environment, and ask Hydromancer (data@hydromancer.xyz) to revoke and reissue a key whose URL may have been logged.
+
 ## Messages
 
 Subscribe (the optional `requestId`, up to 128 characters, is echoed back):
@@ -35,12 +37,14 @@ The server sends `{"type": "ping"}` every 60 seconds. Reply `{"type": "pong"}` (
 - Don't send a burst of subscribes while a replay is running.
 - Full details: https://docs.hydromancer.xyz/readme/websocket/session-management-and-reconnection
 
-## Limits (per plan: Starter / Growth / Scale)
+## Limits
 
-- Connections: 50 / 500 / 1,000. Total subscriptions: 500 / 5,000 / 10,000. Inbound messages per minute: 300 / 3,000 / 6,000.
-- Per-coin streams, for example: `l4BookUpdates` 10 / 100 / 200 coins, `l2Book` 10 / 50 / 100, `bbo` 20 / 100 / 200, `trades` and `allFills` 20 / 100 / 200 coins.
+Limits depend on the key. Current ranges:
+
+- Connections 50 to 1,000; total subscriptions 500 to 10,000; inbound messages 300 to 6,000 per minute.
+- Per-coin streams, for example: `l4BookUpdates` 10 to 200 coins, `l2Book` 10 to 100, `bbo` 20 to 200, `trades` and `allFills` 20 to 200 coins.
 - Each address in `userFills`, `userOrderUpdates` and similar counts as one subscription.
-- All-coin firehoses (`allFills` or `trades` with no coin filter, `l4BookUpdatesAll` and so on) are separate add-ons.
+- All-coin streams (`allFills` or `trades` with no coin filter, `l4BookUpdatesAll` and so on) need extra permission on the key.
 - Current table: https://docs.hydromancer.xyz/readme/websocket/rate-limits-user-limits-and-heartbeats
 
 ## Channel catalog
@@ -62,53 +66,53 @@ Stream live orders, fills, funding and ledger events for a builder and its fee-a
 
 ### Orderbook streaming
 
-Stream real-time BBO, L2 snapshots, L2 diffs and L4 orderbook updates.
+Stream live BBO, L2 snapshots, L2 diffs and L4 orderbook updates.
 
 | type | What it returns | Docs |
 |---|---|---|
-| `bbo` | Stream real-time best bid and offer for a coin. | [docs](https://docs.hydromancer.xyz/readme/websocket/orderbook-streaming/bbo) |
-| `l2Book` | Stream real-time L2 orderbook snapshots per coin. | [docs](https://docs.hydromancer.xyz/readme/websocket/orderbook-streaming/l2book) |
-| `l2BookDiff` | Stream real-time L2 orderbook diffs (incremental updates) per block. | [docs](https://docs.hydromancer.xyz/readme/websocket/orderbook-streaming/l2bookdiff) |
-| `l4BookUpdates` | Stream real-time L4 orderbook updates per block. | [docs](https://docs.hydromancer.xyz/readme/websocket/orderbook-streaming/l4bookupdates) |
+| `bbo` | Stream live best bid and offer for a coin. | [docs](https://docs.hydromancer.xyz/readme/websocket/orderbook-streaming/bbo) |
+| `l2Book` | Stream live L2 orderbook snapshots per coin. | [docs](https://docs.hydromancer.xyz/readme/websocket/orderbook-streaming/l2book) |
+| `l2BookDiff` | Stream live L2 orderbook diffs (incremental updates) per block. | [docs](https://docs.hydromancer.xyz/readme/websocket/orderbook-streaming/l2bookdiff) |
+| `l4BookUpdates` | Stream live L4 orderbook updates per block. | [docs](https://docs.hydromancer.xyz/readme/websocket/orderbook-streaming/l4bookupdates) |
 
 ### TP/SL streaming
 
-Stream real-time TP/SL trigger order updates per block.
+Stream live TP/SL trigger order updates per block.
 
 | type | What it returns | Docs |
 |---|---|---|
-| `tpslUpdates` | Stream real-time TP/SL trigger order updates per block. | [docs](https://docs.hydromancer.xyz/readme/websocket/tp-sl-streaming/tpslupdates) |
+| `tpslUpdates` | Stream live TP/SL trigger order updates per block. | [docs](https://docs.hydromancer.xyz/readme/websocket/tp-sl-streaming/tpslupdates) |
 
 ### Candles
 
-Stream real-time OHLCV candle updates for one coin or all coins.
+Stream live OHLCV candle updates for one coin or all coins.
 
 | type | What it returns | Docs |
 |---|---|---|
-| `candle` | Stream real-time OHLCV candle updates for a specific coin and interval. | [docs](https://docs.hydromancer.xyz/readme/websocket/candles/candles) |
-| `allCandles` | Stream real-time OHLCV candle updates for all coins at a specific interval, batched per block. Requires special permission. | [docs](https://docs.hydromancer.xyz/readme/websocket/candles/allcandles) |
+| `candle` | Stream live OHLCV candle updates for a specific coin and interval. | [docs](https://docs.hydromancer.xyz/readme/websocket/candles/candles) |
+| `allCandles` | Stream live OHLCV candle updates for all coins at a specific interval, batched per block. Needs extra permission on the key. | [docs](https://docs.hydromancer.xyz/readme/websocket/candles/allcandles) |
 
 ### Trades data
 
-Stream all fills, liquidation fills and real-time trades.
+Stream all fills, liquidation fills and live trades.
 
 | type | What it returns | Docs |
 |---|---|---|
 | `allFills` | Stream all fills, optionally filtered to one or more coins. | [docs](https://docs.hydromancer.xyz/readme/websocket/trades-data/allfills) |
 | `liquidationFills` | Stream all liquidation fills. | [docs](https://docs.hydromancer.xyz/readme/websocket/trades-data/liquidationfills) |
-| `trades` | HL-compatible real-time trade stream, with optional firehose add-on. | [docs](https://docs.hydromancer.xyz/readme/websocket/trades-data/trades) |
+| `trades` | Live trade stream; the all-coin version needs extra permission on the key. | [docs](https://docs.hydromancer.xyz/readme/websocket/trades-data/trades) |
 
 ### Prices data and asset context
 
-Stream real-time oracle, mark and mid prices and asset contexts.
+Stream live oracle, mark and mid prices and asset contexts.
 
 | type | What it returns | Docs |
 |---|---|---|
-| `activeAssetCtx` | Real-time stream of oracle-, mid- and mark prices for an asset. Sends updates every second. | [docs](https://docs.hydromancer.xyz/readme/websocket/prices-data-and-asset-context/activeassetctx) |
-| `allActiveAssetCtx` | Stream all asset contexts in a single batch message. Requires add-on permission. | [docs](https://docs.hydromancer.xyz/readme/websocket/prices-data-and-asset-context/allactiveassetctx) |
-| `allMids` | Stream mid prices for every market, updated every block. Requires add-on permission. | [docs](https://docs.hydromancer.xyz/readme/websocket/prices-data-and-asset-context/allmids) |
+| `activeAssetCtx` | Live stream of oracle, mid and mark prices for an asset. | [docs](https://docs.hydromancer.xyz/readme/websocket/prices-data-and-asset-context/activeassetctx) |
+| `allActiveAssetCtx` | Stream all asset contexts in a single batch message. Needs extra permission on the key. | [docs](https://docs.hydromancer.xyz/readme/websocket/prices-data-and-asset-context/allactiveassetctx) |
+| `allMids` | Stream mid prices for every market, updated every block. Needs extra permission on the key. | [docs](https://docs.hydromancer.xyz/readme/websocket/prices-data-and-asset-context/allmids) |
 | `perpPrices` | Stream the accepted oracle and mark prices of perps, one message per block. | [docs](https://docs.hydromancer.xyz/readme/websocket/prices-data-and-asset-context/perpprices) |
-| `setOracleUpdates` | Real-time stream of oracle, mark and external perp prices for a DEX, including failed updates | [docs](https://docs.hydromancer.xyz/readme/websocket/prices-data-and-asset-context/setoracleupdates) |
+| `setOracleUpdates` | Live stream of oracle, mark and external perp prices for a DEX, including failed updates | [docs](https://docs.hydromancer.xyz/readme/websocket/prices-data-and-asset-context/setoracleupdates) |
 
 ### Leverage and margin updates
 
