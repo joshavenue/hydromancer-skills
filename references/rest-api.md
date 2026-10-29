@@ -33,7 +33,7 @@ data = r.json()   # {"successful_states": ..., "failed_wallets": ...}
 Field notes for common endpoints:
 - `clearinghouseState`: `user`. Returns `marginSummary`, `crossMarginSummary`, `withdrawable`, `assetPositions`, `time`.
 - `batchClearinghouseStates`: `users` (up to 1,000; 100 with `"dex": "ALL_DEXES"`), optional `dex`. Weight 2 per user, capped at 100 points; with `ALL_DEXES` the cost is multiplied by the number of DEXs.
-- `userFillsByTime`: `user`, `startTime` or `cursor`, optional `endTime`, `builder`, `dex`, `venue`, `aggregateByTime`, `limit` (default 2000). Returns a list, oldest first; each fill has `time` and `txIndex`, so the next cursor is `f"{time}_{txIndex}"` from the last record.
+- `userFillsByTime`: `user`, `startTime` or `cursor`, optional `endTime`, `builder`, `dex`, `venue`, `aggregateByTime`, `limit` (default 2000; larger values are capped at 2000). Returns a list, oldest first; each fill has `time` and `txIndex`, so the next cursor is `f"{time}_{txIndex}"` from the last record.
 - `liquidationHistoryByTime`: optional `coin` (omit for market-wide; HIP-3 as `"xyz:JPY"`), `startTime`, `endTime`, `limit` (default 500, max 1000). Returns a list of fills.
 - `outcomeMeta`: optional `venue`, `deployedBy` (`"all"`, `"validator"` or `"venue"`). HIP-4 outcomes with `sideSpecs`.
 - `perpSnapshots`: `market_names`, e.g. `["BTC"]`, `["xyz:BTC"]` or `["ALL:ALL_DEXES"]`. Binary response (zstd-compressed MessagePack; `scripts/hydromancer.py` doesn't decode it); call `perpSnapshotTimestamp` (weight 1) first to see whether a new snapshot exists.
@@ -144,7 +144,7 @@ Endpoints for querying vault summaries, user vault equities and the vaults a use
 
 | type | What it returns | Docs |
 |---|---|---|
-| `vaultSummaries` | Returns summary information for all vaults on the platform. | [docs](https://docs.hydromancer.xyz/readme/rest-api/vaults/vaultsummaries) |
+| `vaultSummaries` | Returns summary information for vaults. Usually `[]` on both Hydromancer and Hyperliquid (it appears to list only very new vaults); for a wallet's vaults use `leadingVaults` or `userVaultEquities`. | [docs](https://docs.hydromancer.xyz/readme/rest-api/vaults/vaultsummaries) |
 | `userVaultEquities` | Returns vault equity information for a specific user. | [docs](https://docs.hydromancer.xyz/readme/rest-api/vaults/uservaultequities) |
 | `leadingVaults` | Returns vaults that a user is leading. | [docs](https://docs.hydromancer.xyz/readme/rest-api/vaults/leadingvaults) |
 
@@ -177,7 +177,7 @@ Retrieve metadata about perpetual and spot markets, margin requirements, exchang
 | `perpConciseAnnotations` | Returns concise annotations for every annotated perpetual asset as a list of [coin, annotation] pairs. | [docs](https://docs.hydromancer.xyz/readme/rest-api/metadata/perpconciseannotations) |
 | `perpDexStatus` | Returns the status of a builder-deployed (HIP-3) perp DEX, including its total net deposits. | [docs](https://docs.hydromancer.xyz/readme/rest-api/metadata/perpdexstatus) |
 | `perpDexLimits` | Returns the open-interest and transfer limits for a builder-deployed (HIP-3) perp DEX, including the per-asset open-interest caps. | [docs](https://docs.hydromancer.xyz/readme/rest-api/metadata/perpdexlimits) |
-| `alignedQuoteTokenInfo` | Returns alignment and yield info for a quote token (e.g. USDH) by its token index, else returns null. | [docs](https://docs.hydromancer.xyz/readme/rest-api/metadata/alignedquotetokeninfo) |
+| `alignedQuoteTokenInfo` | **Currently unavailable:** every request returns 422 "Failed to deserialize the JSON body", on Hydromancer and on Hyperliquid's own API (Oct 2026). | [docs](https://docs.hydromancer.xyz/readme/rest-api/metadata/alignedquotetokeninfo) |
 | `exchangeStatus` | Returns the current status of the exchange. | [docs](https://docs.hydromancer.xyz/readme/rest-api/metadata/exchangestatus) |
 
 ### Token deployment

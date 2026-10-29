@@ -20,7 +20,7 @@ Docs: https://docs.hydromancer.xyz/reservoir · schemas: [fills](https://docs.hy
 | Account values (daily) | `global/snapshots/account_values/date=YYYY-MM-DD/` |
 | L2 order book, 20 levels, 1-minute | `by_dex/hyperliquid/orderbook/1m/{asset_class}/date=YYYY-MM-DD/{coin}.parquet` (see the orderbook schema page for `asset_class` values) |
 
-HIP-3 DEXs have their own folders under `by_dex/<dex>/`; see the per-DEX pages in the docs. Inside Reservoir, HIP-3 coin names don't carry the `dex:` prefix; the path's `<dex>` segment identifies the DEX. Sub-datasets (liquidations, ADL…) only have files for dates with events. Check the docs for current coverage dates before assuming a range exists.
+HIP-3 DEXs have their own folders under `by_dex/<dex>/`; see the per-DEX pages in the docs. HIP-3 coins keep the `dex:` prefix inside fills, candles and snapshots (`coin = 'xyz:AAPL'`, `market = 'xyz:AAPL'`); only order-book file names drop it (`by_dex/xyz/orderbook/1m/perps/date=…/AAPL.parquet`). Sub-datasets (liquidations, ADL…) only have files for dates with events. Check the docs for current coverage dates before assuming a range exists.
 
 ## Access
 
@@ -32,12 +32,31 @@ aws s3 cp s3://hydromancer-reservoir/by_dex/hyperliquid/fills/perp/liquidations/
   ./liquidations-2026-10-18.parquet --request-payer requester
 ```
 
-DuckDB (reads only the columns and row groups a query needs):
+DuckDB reads only the columns and row groups a query needs. Install `pip install duckdb==1.4.5 pytz` (without `pytz`, Python fetches of timestamp columns fail with `No module named 'pytz'`).
+
+Connect by exporting your active AWS CLI session into environment variables. A plain `PROVIDER credential_chain` secret fails with `aws login` sessions (`Secret Validation Failure … Credential Chain: 'config'`), and every query after it returns 403:
+
+```python
+import json, os, subprocess, duckdb
+
+creds = json.loads(subprocess.check_output(
+    ["aws", "configure", "export-credentials", "--format", "process"], text=True))
+for src, dst in [("AccessKeyId", "AWS_ACCESS_KEY_ID"),
+                 ("SecretAccessKey", "AWS_SECRET_ACCESS_KEY"),
+                 ("SessionToken", "AWS_SESSION_TOKEN")]:
+    if creds.get(src):
+        os.environ[dst] = creds[src]   # in memory only; never print or save these
+
+con = duckdb.connect()
+con.execute("INSTALL httpfs; LOAD httpfs; SET TimeZone = 'UTC';")
+con.execute("""CREATE SECRET (TYPE s3, PROVIDER credential_chain, CHAIN 'env',
+               REGION 'ap-northeast-1');
+               SET s3_requester_pays = true;""")
+```
+
+Then run queries with `con.execute(sql).fetchall()`:
 
 ```sql
-INSTALL httpfs; LOAD httpfs;
-CREATE SECRET (TYPE s3, PROVIDER credential_chain, REGION 'ap-northeast-1');
-SET s3_requester_pays = true;
 
 -- BTC fills for one day
 SELECT timestamp, side, price, size, direction, address
@@ -60,7 +79,7 @@ WHERE market = 'BTC'
 ORDER BY abs(size) DESC LIMIT 10;
 ```
 
-The queries come from the Reservoir docs. `SET s3_requester_pays = true` and the secret syntax were checked against DuckDB 1.4.5; the queries themselves need your AWS credentials to run.
+Tested on DuckDB 1.4.5 with this setup, using both a root `aws login` session and a read-only IAM user signed in with `aws login`: all three queries return data. Without `s3_requester_pays = true` you get HTTP 403; with a region other than `ap-northeast-1`, HTTP 301.
 
 ## Cost control
 
