@@ -10,6 +10,7 @@ description: >
   backtests or research, or when the task mentions Hyperliquid, HyperCore, HIP-3, HIP-4,
   builder codes, whale tracking, order book data, liquidations, funding history,
   wallet trade history, or Hydromancer.
+license: MIT
 ---
 
 # Hyperliquid data via Hydromancer
