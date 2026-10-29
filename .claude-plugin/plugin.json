@@ -1,0 +1,22 @@
+{
+  "name": "hydromancer-hyperliquid",
+  "displayName": "Hydromancer Hyperliquid data",
+  "icon": "./.claude-plugin/icon.png",
+  "description": "Hyperliquid market and account data through the Hydromancer API: REST endpoints, WebSocket streams and the Reservoir S3 archive.",
+  "author": {
+    "name": "Hydromancer",
+    "url": "https://hydromancer.xyz"
+  },
+  "homepage": "https://docs.hydromancer.xyz",
+  "repository": "https://github.com/joshavenue/hydromancer-skills",
+  "license": "MIT",
+  "keywords": [
+    "hyperliquid",
+    "hypercore",
+    "market-data",
+    "orderbook",
+    "websocket",
+    "trading-data",
+    "hydromancer"
+  ]
+}

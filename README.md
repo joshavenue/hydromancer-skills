@@ -8,7 +8,14 @@ An [Agent Skill](https://docs.anthropic.com/en/docs/agents-and-tools/agent-skill
 
 ## Install
 
-Claude Code (personal skills):
+Claude Code, as a plugin:
+
+```
+/plugin marketplace add joshavenue/hydromancer-skills
+/plugin install hydromancer-hyperliquid@hydromancer
+```
+
+Or as a personal skill:
 
 ```bash
 git clone https://github.com/joshavenue/hydromancer-skills.git ~/.claude/skills/hydromancer-hyperliquid

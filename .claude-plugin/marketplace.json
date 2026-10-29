@@ -1,0 +1,17 @@
+{
+  "name": "hydromancer",
+  "owner": {
+    "name": "Hydromancer",
+    "url": "https://hydromancer.xyz"
+  },
+  "description": "Agent Skills for building on Hyperliquid with Hydromancer data.",
+  "plugins": [
+    {
+      "name": "hydromancer-hyperliquid",
+      "source": "./",
+      "description": "Hyperliquid market and account data through the Hydromancer API: REST endpoints, WebSocket streams and the Reservoir S3 archive.",
+      "category": "data",
+      "tags": ["hyperliquid", "market-data", "websocket", "orderbook"]
+    }
+  ]
+}
