@@ -177,7 +177,6 @@ Retrieve metadata about perpetual and spot markets, margin requirements, exchang
 | `perpConciseAnnotations` | Returns concise annotations for every annotated perpetual asset as a list of [coin, annotation] pairs. | [docs](https://docs.hydromancer.xyz/readme/rest-api/metadata/perpconciseannotations) |
 | `perpDexStatus` | Returns the status of a builder-deployed (HIP-3) perp DEX, including its total net deposits. | [docs](https://docs.hydromancer.xyz/readme/rest-api/metadata/perpdexstatus) |
 | `perpDexLimits` | Returns the open-interest and transfer limits for a builder-deployed (HIP-3) perp DEX, including the per-asset open-interest caps. | [docs](https://docs.hydromancer.xyz/readme/rest-api/metadata/perpdexlimits) |
-| `alignedQuoteTokenInfo` | **Currently unavailable:** every request returns 422 "Failed to deserialize the JSON body", on Hydromancer and on Hyperliquid's own API (Oct 2026). | [docs](https://docs.hydromancer.xyz/readme/rest-api/metadata/alignedquotetokeninfo) |
 | `exchangeStatus` | Returns the current status of the exchange. | [docs](https://docs.hydromancer.xyz/readme/rest-api/metadata/exchangestatus) |
 
 ### Token deployment
