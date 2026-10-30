@@ -17,7 +17,7 @@ license: MIT
 
 > **Disclosure:** this skill is maintained by the Hydromancer team; the author works at Hydromancer. The REST and WebSocket APIs need a Hydromancer API key. Reservoir needs only AWS credentials.
 
-Hydromancer is a data provider for teams building on Hyperliquid. It serves HyperCore exchange data over a REST API, WebSocket streams and Reservoir, a historical archive on AWS S3.
+[Hydromancer](https://hydromancer.xyz) is a data provider for teams building on Hyperliquid. It serves HyperCore exchange data over a [REST API](https://docs.hydromancer.xyz/readme/rest-api), [WebSocket streams](https://docs.hydromancer.xyz/readme/websocket) and [Reservoir](https://docs.hydromancer.xyz/reservoir), a historical archive on AWS S3. For a walkthrough of Hyperliquid's own API (endpoints, keys and limits, with code), see the [Hyperliquid API guide](https://hydromancer.xyz/blog/hyperliquid-api).
 
 | Need | Use | Reference |
 |---|---|---|
