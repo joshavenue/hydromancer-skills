@@ -1,0 +1,35 @@
+{
+  "name": "hydromancer-hyperliquid",
+  "displayName": "Hydromancer Hyperliquid Data",
+  "version": "1.0.0",
+  "description": "Read-only Hyperliquid data in Cursor: a skill for the Hydromancer REST API, WebSocket streams and the Reservoir S3 archive, plus the Hydromancer MCP server for wallets, top traders, markets, funding and liquidations.",
+  "author": {
+    "name": "Hydromancer",
+    "email": "data@hydromancer.xyz"
+  },
+  "homepage": "https://hydromancer.xyz",
+  "repository": "https://github.com/joshavenue/hydromancer-skills",
+  "license": "MIT",
+  "keywords": ["hyperliquid", "hypercore", "market-data", "orderbook", "websocket", "trading-data", "hydromancer"],
+  "logo": ".claude-plugin/icon.png",
+  "variables": {
+    "type": "object",
+    "properties": {
+      "HYDROMANCER_API_KEY": {
+        "type": "string",
+        "title": "Hydromancer API key",
+        "description": "Your Hydromancer API key (https://docs.hydromancer.xyz/readme/get-api-keys). Used only by the MCP server, which sends it to api.hydromancer.xyz."
+      }
+    },
+    "required": ["HYDROMANCER_API_KEY"]
+  },
+  "mcpServers": {
+    "hydromancer": {
+      "command": "npx",
+      "args": ["-y", "hydromancer-mcp@0.2.1"],
+      "env": {
+        "HYDROMANCER_API_KEY": "${HYDROMANCER_API_KEY}"
+      }
+    }
+  }
+}

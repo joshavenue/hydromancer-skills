@@ -25,6 +25,8 @@ git clone https://github.com/joshavenue/hydromancer-skills.git ~/.claude/skills/
 
 Or per project: copy the folder into `.claude/skills/hydromancer-hyperliquid/`. Other agents: point them at `SKILL.md`; the `references/` files load on demand.
 
+Cursor, as a plugin: the repo has a `.cursor-plugin/plugin.json` that bundles this skill with the [Hydromancer MCP server](https://www.npmjs.com/package/hydromancer-mcp) (read-only tools for wallets, top traders, markets, funding and liquidations; it needs Node.js 20+). Set `HYDROMANCER_API_KEY` in the plugin's variables, in the Cursor dashboard under Plugins (at install, or later via Configure). To try it locally, clone the repo into `~/.cursor/plugins/local/hydromancer-hyperliquid`, then restart Cursor or run Developer: Reload Window.
+
 ## Requirements
 
 - A Hydromancer API key in `HYDROMANCER_API_KEY` ([how to get one](https://docs.hydromancer.xyz/readme/get-api-keys)).
