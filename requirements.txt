@@ -9,7 +9,7 @@ pytz==2026.6
 
 # Decoding perpSnapshots, spotSnapshots, accountValueSnapshots
 zstandard==0.25.0
-msgpack==1.1.2
+msgpack==1.2.4
 
 # Python example in references/rest-api.md
-requests==2.32.5
+requests==2.34.2
